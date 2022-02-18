@@ -4,6 +4,7 @@ import { Call } from 'types';
 export interface CallContext {
   calls: Call[],
   currentCall: Call | undefined,
+  getCall: (id: string) => void,
   getCalls: () => void,
 }
 
@@ -11,6 +12,7 @@ export interface CallContext {
 export const Context = React.createContext<CallContext>({
   currentCall: undefined,
   calls: [],
+  getCall: () => {},
   getCalls: () => {},
 });
 

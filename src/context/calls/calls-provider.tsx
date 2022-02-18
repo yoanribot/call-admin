@@ -1,4 +1,4 @@
-import React, { memo, useState } from "react";
+import React, { useState } from "react";
 import { Provider } from "./calls-context";
 import { Call, Pagination } from "types";
 import axios from "axios";
@@ -27,11 +27,22 @@ const PlacesProvider = (props: Props) => {
     }
   };
 
+  const getCall = async (id: string) => {
+    try {
+      const call = await axios.get(`/calls/${id}`).then((res) => res.data);
+
+      setCurrentCall(call);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   return (
     <Provider
       value={{
         currentCall,
         calls,
+        getCall,
         getCalls,
       }}
     >

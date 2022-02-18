@@ -11,7 +11,6 @@ import ListItemAvatar from "@material-ui/core/ListItemAvatar";
 import Avatar from "@material-ui/core/Avatar";
 import CallIcon from "@material-ui/icons/Call";
 import ArrowForwardIcon from "@material-ui/icons/ArrowForward";
-import { Call } from "../types/index";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -46,8 +45,6 @@ const CallList = () => {
     }
   }, [isAuth]);
 
-  const onClickCall = (_call: Call) => {};
-
   return (
     <section>
       <h2>Call List</h2>
@@ -64,8 +61,8 @@ const CallList = () => {
                 <ListItemText
                   primary={
                     <>
-                      From: {call.from}{" "}
-                      <ArrowForwardIcon className={classes.arrow} /> To:{" "}
+                      From: {call.from}
+                      <ArrowForwardIcon className={classes.arrow} /> To:
                       {call.to}
                     </>
                   }
