@@ -8,6 +8,10 @@ export type Note = {
   content: string,
 };
 
+export type CallGroups<T> = {
+  [key: string]: T[],
+}
+
 export type Call = {
   id: string,
   direction: string,
