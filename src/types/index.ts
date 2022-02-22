@@ -22,4 +22,4 @@ export type Call = {
 };
 
 export type Secret = { access_token: string, refresh_token: string };
-export type Pagination = { offset: number, limit: number, hasNextPage: boolean, totalCount: number };
+export type Pagination = { currentPage: number, pageLimit: number, hasNextPage: boolean, totalCount: number };

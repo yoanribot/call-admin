@@ -1,9 +1,11 @@
 import React from 'react';
-import { Call } from 'types';
+import { Call, Pagination } from 'types';
 
 export interface CallContext {
-  calls: Call[],
   currentCall: Call | undefined,
+  calls: Call[],
+  pagination: Pagination,
+  updatePagination: (page: number) => void,
   getCall: (id: string) => void,
   getCalls: () => void,
 }
@@ -12,6 +14,13 @@ export interface CallContext {
 export const Context = React.createContext<CallContext>({
   currentCall: undefined,
   calls: [],
+  pagination: {
+    currentPage: 0,
+    pageLimit: 10,
+    hasNextPage: false,
+    totalCount: 0,
+  },
+  updatePagination: () => {},
   getCall: () => {},
   getCalls: () => {},
 });
