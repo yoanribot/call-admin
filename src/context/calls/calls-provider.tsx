@@ -67,6 +67,18 @@ const PlacesProvider = (props: Props) => {
     }
   };
 
+  const addNote = async (callId: string, text: string) => {
+    try {
+      await axios.post(`/calls/${callId}/note`, {
+        content: text,
+      });
+
+      getCall(callId);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   return (
     <Provider
       value={{
@@ -77,6 +89,7 @@ const PlacesProvider = (props: Props) => {
         archive,
         getCall,
         getCalls,
+        addNote,
       }}
     >
       {props.children}

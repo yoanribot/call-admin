@@ -148,7 +148,7 @@ const CallList = () => {
               startIcon={<GroupWorkIcon />}
               onClick={onGroupByDate}
             >
-              Group By Date
+              {isGroupByDate ? "View All" : "Group By Date"}
             </Button>
           </div>
         </div>

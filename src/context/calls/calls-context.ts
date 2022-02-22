@@ -9,6 +9,7 @@ export interface CallContext {
   getCall: (id: string) => void,
   getCalls: () => void,
   archive: (callIds: string[]) => void,
+  addNote: (callId: string, text: string) => void,
 }
 
 
@@ -25,6 +26,7 @@ export const Context = React.createContext<CallContext>({
   getCall: () => {},
   getCalls: () => {},
   archive: () => {},
+  addNote: () => {},
 });
 
 export const Consumer = Context.Consumer;
