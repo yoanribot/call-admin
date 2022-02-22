@@ -15,6 +15,9 @@ import ListItemIcon from "@material-ui/core/ListItemIcon";
 import Checkbox from "@material-ui/core/Checkbox";
 import Typography from "@material-ui/core/Typography";
 import Pagination from "./Pagination";
+import Button from "@material-ui/core/Button";
+import SaveIcon from "@material-ui/icons/Save";
+import SaveAltIcon from "@material-ui/icons/SaveAlt";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -38,7 +41,6 @@ const useStyles = makeStyles((theme) => ({
   },
   listItem: {
     display: "flex",
-    justifyContent: "center",
   },
   callElem: {
     cursor: "pointer",
@@ -51,17 +53,20 @@ const useStyles = makeStyles((theme) => ({
     borderRadius: "10px",
     color: "black",
   },
+  selection: {
+    display: "flex",
+    justifyContent: "space-between",
+  },
+  archivedBtn: {},
 }));
 
 const CallList = () => {
   const classes = useStyles();
 
-  const { calls, pagination, getCalls, updatePagination } =
+  const { calls, pagination, getCalls, updatePagination, archive } =
     useContext(CallContext);
   const { isAuth } = useContext(UserConext);
   const [checked, setChecked] = useState<string[]>([]);
-
-  console.log(pagination);
 
   useEffect(() => {
     if (isAuth) {
@@ -82,12 +87,32 @@ const CallList = () => {
     setChecked(newChecked);
   };
 
+  const onArchive = () => {
+    archive(checked);
+    setChecked([]);
+  };
+
   return (
     <section>
       <Typography variant={"h4"} color={"primary"}>
         Call List
       </Typography>
       <div className={classes.listWrapper}>
+        <div className={classes.selection}>
+          <p>Selected: {checked.length}</p>
+          <Button
+            variant="contained"
+            color="primary"
+            size="small"
+            className={classes.archivedBtn}
+            startIcon={<SaveIcon />}
+            disabled={!checked.length}
+            onClick={onArchive}
+          >
+            Archive
+          </Button>
+        </div>
+
         <List className={classes.root}>
           {calls?.map((call) => (
             <ListItem key={call.id} className={classes.listItem}>
@@ -97,6 +122,7 @@ const CallList = () => {
                   checked={checked.indexOf(call.id) !== -1}
                   tabIndex={-1}
                   disableRipple
+                  onClick={onSelect(call.id)}
                 />
               </ListItemIcon>
               <Link to={`/call/${call.id}`} className={classes.callElem}>
@@ -115,10 +141,12 @@ const CallList = () => {
                   }
                   secondary={new Date(call.created_at).toDateString()}
                 />
+                {call.is_archived && <SaveAltIcon style={{ marginLeft: 15 }} />}
               </Link>
             </ListItem>
           ))}
         </List>
+
         <Pagination
           isVisible={calls?.length > 0}
           limit={pagination.pageLimit}

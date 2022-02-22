@@ -52,6 +52,21 @@ const PlacesProvider = (props: Props) => {
     }
   };
 
+  const archive = async (callIds: string[]) => {
+    try {
+      console.log("archive ...");
+      console.log({ calls });
+
+      await Promise.all(
+        callIds.map((callId) => axios.put(`/calls/${callId}/archive`))
+      );
+
+      getCalls(pagination.currentPage, pagination.pageLimit);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   return (
     <Provider
       value={{
@@ -59,6 +74,7 @@ const PlacesProvider = (props: Props) => {
         calls,
         pagination,
         updatePagination,
+        archive,
         getCall,
         getCalls,
       }}

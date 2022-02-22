@@ -8,6 +8,7 @@ export interface CallContext {
   updatePagination: (page: number) => void,
   getCall: (id: string) => void,
   getCalls: () => void,
+  archive: (callIds: string[]) => void,
 }
 
 
@@ -23,6 +24,7 @@ export const Context = React.createContext<CallContext>({
   updatePagination: () => {},
   getCall: () => {},
   getCalls: () => {},
+  archive: () => {},
 });
 
 export const Consumer = Context.Consumer;
