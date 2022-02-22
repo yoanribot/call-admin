@@ -3,6 +3,7 @@ import { Provider } from "./calls-context";
 import { Call, Pagination } from "types";
 import axios from "axios";
 import constants from "App-constants";
+import { useSnackbar } from "notistack";
 
 const { PAGINATION_DEFAULT_LIMIT } = constants;
 
@@ -16,6 +17,7 @@ const PlacesProvider = (props: Props) => {
     hasNextPage: false,
     totalCount: 0,
   });
+  const { enqueueSnackbar } = useSnackbar();
 
   useEffect(() => {
     getCalls(pagination.currentPage, pagination.pageLimit);
@@ -61,6 +63,8 @@ const PlacesProvider = (props: Props) => {
         callIds.map((callId) => axios.put(`/calls/${callId}/archive`))
       );
 
+      enqueueSnackbar("Archive done");
+
       getCalls(pagination.currentPage, pagination.pageLimit);
     } catch (error) {
       console.log(error);
@@ -73,6 +77,7 @@ const PlacesProvider = (props: Props) => {
         content: text,
       });
 
+      enqueueSnackbar("New note added successfully !");
       getCall(callId);
     } catch (error) {
       console.log(error);

@@ -6,20 +6,22 @@ import App from "./App";
 import reportWebVitals from "./reportWebVitals";
 import { Provider as UserProvider } from "./context/user";
 import { Provider as CallsProvider } from "./context/calls";
-import constants from "App-constants";
+import { SnackbarProvider } from "notistack";
 import axios from "axios";
 
 axios.defaults.baseURL = "https://frontend-test-api.aircall.io";
 
 ReactDOM.render(
   <React.StrictMode>
-    <Router>
-      <UserProvider>
-        <CallsProvider>
-          <App />
-        </CallsProvider>
-      </UserProvider>
-    </Router>
+    <SnackbarProvider>
+      <Router>
+        <UserProvider>
+          <CallsProvider>
+            <App />
+          </CallsProvider>
+        </UserProvider>
+      </Router>
+    </SnackbarProvider>
   </React.StrictMode>,
   document.getElementById("root")
 );
