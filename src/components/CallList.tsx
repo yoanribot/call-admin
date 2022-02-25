@@ -21,6 +21,7 @@ import Button from "@material-ui/core/Button";
 import SaveIcon from "@material-ui/icons/Save";
 import SaveAltIcon from "@material-ui/icons/SaveAlt";
 import GroupWorkIcon from "@material-ui/icons/GroupWork";
+import Card from "@material-ui/core/Card";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -63,9 +64,18 @@ const useStyles = makeStyles((theme) => ({
   },
   callsGroup: {
     backgroundColor: "#f8f8f8",
-    padding: "10px",
     borderRadius: "10px",
     marginBottom: 15,
+    border: "2px solid #3f51b5",
+  },
+  callsGroupTitle: {
+    backgroundColor: "#3f51b5",
+    color: "white",
+    marginBottom: 15,
+    padding: "10px",
+  },
+  callsGroupBody: {
+    padding: "10px",
   },
   archivedBtn: {},
 }));
@@ -126,7 +136,6 @@ const CallList = () => {
       <div className={classes.listWrapper}>
         <div className={classes.selection}>
           <div>
-            <span>Selected: {checked.length}</span>
             <Button
               variant="contained"
               color="primary"
@@ -136,7 +145,7 @@ const CallList = () => {
               disabled={!checked.length}
               onClick={onArchive}
             >
-              Archive
+              Archive [{checked.length}]
             </Button>
           </div>
           <div>
@@ -154,44 +163,48 @@ const CallList = () => {
         </div>
 
         {Object.keys(callsGroups).map((groupKey) => (
-          <div key={`group-${groupKey}`} className={classes.callsGroup}>
-            <h3>{groupKey}</h3>
-            <List className={classes.root}>
-              {callsGroups[groupKey]?.map((call) => (
-                <ListItem key={call.id} className={classes.listItem}>
-                  <ListItemIcon>
-                    <Checkbox
-                      edge="start"
-                      checked={checked.indexOf(call.id) !== -1}
-                      tabIndex={-1}
-                      disableRipple
-                      onClick={onSelect(call.id)}
-                    />
-                  </ListItemIcon>
-                  <Link to={`/call/${call.id}`} className={classes.callElem}>
-                    <ListItemAvatar className={classes.callIconWrapper}>
-                      <Avatar>
-                        <CallIcon />
-                      </Avatar>
-                    </ListItemAvatar>
-                    <ListItemText
-                      primary={
-                        <>
-                          From: {call.from}
-                          <ArrowForwardIcon className={classes.arrow} /> To:
-                          {call.to}
-                        </>
-                      }
-                      secondary={new Date(call.created_at).toDateString()}
-                    />
-                    {call.is_archived && (
-                      <SaveAltIcon style={{ marginLeft: 15 }} />
-                    )}
-                  </Link>
-                </ListItem>
-              ))}
-            </List>
-          </div>
+          <Card key={`group-${groupKey}`} className={classes.callsGroup}>
+            <div className={classes.callsGroupTitle}>
+              <Typography variant="h5">{groupKey}</Typography>
+            </div>
+            <div className={classes.callsGroupBody}>
+              <List className={classes.root}>
+                {callsGroups[groupKey]?.map((call) => (
+                  <ListItem key={call.id} className={classes.listItem}>
+                    <ListItemIcon>
+                      <Checkbox
+                        edge="start"
+                        checked={checked.indexOf(call.id) !== -1}
+                        tabIndex={-1}
+                        disableRipple
+                        onClick={onSelect(call.id)}
+                      />
+                    </ListItemIcon>
+                    <Link to={`/call/${call.id}`} className={classes.callElem}>
+                      <ListItemAvatar className={classes.callIconWrapper}>
+                        <Avatar>
+                          <CallIcon />
+                        </Avatar>
+                      </ListItemAvatar>
+                      <ListItemText
+                        primary={
+                          <>
+                            From: {call.from}
+                            <ArrowForwardIcon className={classes.arrow} /> To:
+                            {call.to}
+                          </>
+                        }
+                        secondary={new Date(call.created_at).toDateString()}
+                      />
+                      {call.is_archived && (
+                        <SaveAltIcon style={{ marginLeft: 15 }} />
+                      )}
+                    </Link>
+                  </ListItem>
+                ))}
+              </List>
+            </div>
+          </Card>
         ))}
 
         <Pagination
