@@ -27,6 +27,10 @@ export type Call = {
   notes: Note[],
 };
 
+export interface ICallFilter {
+  callType: string,
+}
+
 export type Pagination = { currentPage: number, pageLimit: number, hasNextPage: boolean, totalCount: number };
 
 export type PusherError = {

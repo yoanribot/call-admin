@@ -2,8 +2,8 @@ import React, { useEffect, useContext, useState } from "react";
 import { Context as CallContext } from "context/calls";
 import { Context as UserConext } from "context/user";
 import { Link } from "react-router-dom";
-import { groupByDate } from "utils/helper";
-import { Groups, Call } from "types";
+import { groupByDate, applyFilters } from "utils/helper";
+import { Groups, Call, ICallFilter } from "types";
 
 import { makeStyles } from "@material-ui/core/styles";
 import List from "@material-ui/core/List";
@@ -22,6 +22,8 @@ import SaveIcon from "@material-ui/icons/Save";
 import SaveAltIcon from "@material-ui/icons/SaveAlt";
 import GroupWorkIcon from "@material-ui/icons/GroupWork";
 import Card from "@material-ui/core/Card";
+import FilterListIcon from "@material-ui/icons/FilterList";
+import FiltersForm from "./FiltersForm";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -77,7 +79,9 @@ const useStyles = makeStyles((theme) => ({
   callsGroupBody: {
     padding: "10px",
   },
-  archivedBtn: {},
+  archivedBtn: {
+    marginRight: 10,
+  },
 }));
 
 const CallList = () => {
@@ -87,6 +91,9 @@ const CallList = () => {
     useContext(CallContext);
   const { isAuth } = useContext(UserConext);
   const [checked, setChecked] = useState<string[]>([]);
+  const [isVisibleFiltersForm, setIsVisibleFiltersForm] = useState(false);
+  const [filters, setFilters] = useState<ICallFilter>({ callType: "" });
+  const [filteredCalls, setFilteredCalls] = useState<Call[]>(calls);
   const [isGroupByDate, setIsGroupByDate] = useState(false);
   const [callsGroups, setCallsGroups] = useState<Groups<Call>>({});
 
@@ -97,14 +104,18 @@ const CallList = () => {
   }, [isAuth]);
 
   useEffect(() => {
+    setFilteredCalls(applyFilters(calls, filters));
+  }, [calls, filters]);
+
+  useEffect(() => {
     if (isGroupByDate) {
-      const groups = groupByDate(calls);
+      const groups = groupByDate(filteredCalls);
 
       setCallsGroups(groups);
     } else {
-      setCallsGroups({ All: calls });
+      setCallsGroups({ All: filteredCalls });
     }
-  }, [calls, isGroupByDate]);
+  }, [filteredCalls, isGroupByDate]);
 
   const onSelect = (value: string) => () => {
     const currentIndex = checked.indexOf(value);
@@ -128,8 +139,24 @@ const CallList = () => {
     setIsGroupByDate(!isGroupByDate);
   };
 
+  const showFilters = () => setIsVisibleFiltersForm(true);
+  const hideFilters = () => setIsVisibleFiltersForm(false);
+  const onFilter = (filterData: ICallFilter) => {
+    console.log("onFilter", filterData);
+    setFilters({ ...filters, ...filterData });
+  };
+
+  console.log("calls", calls);
+  console.log("filteredCalls", filteredCalls);
+
   return (
     <section>
+      <FiltersForm
+        isOpen={isVisibleFiltersForm}
+        filters={filters}
+        onClose={hideFilters}
+        onSubmit={onFilter}
+      />
       <Typography variant={"h4"} color={"primary"} align="center">
         Call List
       </Typography>
@@ -147,13 +174,22 @@ const CallList = () => {
             >
               Archive [{checked.length}]
             </Button>
+            <Button
+              variant="contained"
+              color="primary"
+              size="small"
+              className={classes.archivedBtn}
+              startIcon={<FilterListIcon />}
+              onClick={showFilters}
+            >
+              Filter
+            </Button>
           </div>
           <div>
             <Button
               variant="contained"
               color="primary"
               size="small"
-              className={classes.archivedBtn}
               startIcon={<GroupWorkIcon />}
               onClick={onGroupByDate}
             >
