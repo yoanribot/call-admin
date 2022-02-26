@@ -9,7 +9,7 @@ import { Provider as CallsProvider } from "./context/calls";
 import { SnackbarProvider } from "notistack";
 import axios from "axios";
 
-axios.defaults.baseURL = "https://frontend-test-api.aircall.io";
+axios.defaults.baseURL = process.env.REACT_APP_API_BASE_URL;
 
 ReactDOM.render(
   <React.StrictMode>

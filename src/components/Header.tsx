@@ -31,7 +31,7 @@ const useStyles = makeStyles((theme) => ({
 const Header = () => {
   const classes = useStyles();
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
-  const { user, isAuth, login } = useContext(UserConext);
+  const { user, isAuth, login, logout } = useContext(UserConext);
 
   const isMenuOpen = Boolean(anchorEl);
 
@@ -44,9 +44,13 @@ const Header = () => {
   };
 
   const onLogin = () => login();
+  const onLogout = () => {
+    logout();
+    handleClose();
+  };
 
   return (
-    <AppBar position="static">
+    <AppBar className="header" position="static">
       <Toolbar>
         <IconButton
           edge="start"
@@ -87,7 +91,7 @@ const Header = () => {
                 open={isMenuOpen}
                 onClose={handleClose}
               >
-                <MenuItem onClick={handleClose}> Refresh Token </MenuItem>
+                <MenuItem onClick={onLogout}> Log out </MenuItem>
               </Menu>
             </div>
           ) : (

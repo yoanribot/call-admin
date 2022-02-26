@@ -1,6 +1,8 @@
 export type User = {
   id: string,
-  username: string
+  username: string,
+  access_token: string,
+  refresh_token: string,
 };
 
 export type Note = {
@@ -8,7 +10,7 @@ export type Note = {
   content: string,
 };
 
-export type CallGroups<T> = {
+export type Groups<T> = {
   [key: string]: T[],
 }
 
@@ -25,5 +27,12 @@ export type Call = {
   notes: Note[],
 };
 
-export type Secret = { access_token: string, refresh_token: string };
 export type Pagination = { currentPage: number, pageLimit: number, hasNextPage: boolean, totalCount: number };
+
+export type PusherError = {
+  error: {
+    data: {
+      code: number,
+    }
+  }
+}

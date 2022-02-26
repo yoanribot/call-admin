@@ -3,7 +3,7 @@ import { Context as CallContext } from "context/calls";
 import { Context as UserConext } from "context/user";
 import { Link } from "react-router-dom";
 import { groupByDate } from "utils/helper";
-import { CallGroups, Call } from "types";
+import { Groups, Call } from "types";
 
 import { makeStyles } from "@material-ui/core/styles";
 import List from "@material-ui/core/List";
@@ -88,7 +88,7 @@ const CallList = () => {
   const { isAuth } = useContext(UserConext);
   const [checked, setChecked] = useState<string[]>([]);
   const [isGroupByDate, setIsGroupByDate] = useState(false);
-  const [callsGroups, setCallsGroups] = useState<CallGroups<Call>>({});
+  const [callsGroups, setCallsGroups] = useState<Groups<Call>>({});
 
   useEffect(() => {
     if (isAuth) {
@@ -130,7 +130,7 @@ const CallList = () => {
 
   return (
     <section>
-      <Typography variant={"h4"} color={"primary"}>
+      <Typography variant={"h4"} color={"primary"} align="center">
         Call List
       </Typography>
       <div className={classes.listWrapper}>

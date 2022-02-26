@@ -9,7 +9,7 @@ const { PAGINATION_DEFAULT_LIMIT } = constants;
 
 type Props = { children: React.ReactNode };
 const PlacesProvider = (props: Props) => {
-  const [currentCall, setCurrentCall] = useState<Call>();
+  const [currentCall, setCurrentCall] = useState<Call | undefined>();
   const [calls, setCalls] = useState<Call[]>([]);
   const [pagination, setPagination] = useState<Pagination>({
     currentPage: 1,
@@ -19,12 +19,10 @@ const PlacesProvider = (props: Props) => {
   });
   const { enqueueSnackbar } = useSnackbar();
 
-  useEffect(() => {
-    getCalls(pagination.currentPage, pagination.pageLimit);
-  }, [pagination.currentPage]);
-
-  const updatePagination = (page: number) =>
+  const updatePagination = (page: number) => {
     setPagination({ ...pagination, currentPage: page });
+    getCalls(page, pagination.pageLimit);
+  };
 
   const getCalls = async (
     _currentPage = 1,
@@ -46,6 +44,8 @@ const PlacesProvider = (props: Props) => {
 
   const getCall = async (id: string) => {
     try {
+      setCurrentCall(undefined);
+
       const call = await axios.get(`/calls/${id}`).then((res) => res.data);
 
       setCurrentCall(call);
@@ -54,18 +54,17 @@ const PlacesProvider = (props: Props) => {
     }
   };
 
+  const updateCurrentCall = (call: Call) => {
+    setCurrentCall(call);
+  };
+
   const archive = async (callIds: string[]) => {
     try {
-      console.log("archive ...");
-      console.log({ calls });
-
       await Promise.all(
         callIds.map((callId) => axios.put(`/calls/${callId}/archive`))
       );
 
       enqueueSnackbar("Archive done");
-
-      getCalls(pagination.currentPage, pagination.pageLimit);
     } catch (error) {
       console.log(error);
     }
@@ -78,7 +77,6 @@ const PlacesProvider = (props: Props) => {
       });
 
       enqueueSnackbar("New note added successfully !");
-      getCall(callId);
     } catch (error) {
       console.log(error);
     }
@@ -91,6 +89,7 @@ const PlacesProvider = (props: Props) => {
         calls,
         pagination,
         updatePagination,
+        updateCurrentCall,
         archive,
         getCall,
         getCalls,

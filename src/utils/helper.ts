@@ -1,7 +1,7 @@
-import { Call, CallGroups } from 'types'
+import { Call, Groups } from 'types'
 
 export function groupByDate (calls: Call[]) {
-  const groups: CallGroups<Call> = {};
+  const groups: Groups<Call> = {};
 
   for (const item of calls) {
     const key = new Date(item.created_at).toDateString();

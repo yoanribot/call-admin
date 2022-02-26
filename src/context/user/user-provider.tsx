@@ -1,31 +1,49 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import { Provider } from "./user-context";
-import { User, Secret } from "types";
+import { User } from "types";
+import {
+  login as authLogin,
+  getUser,
+  updateAuthToken,
+  logout as authLogout,
+} from "services/authentication";
 import axios from "axios";
 
 type Props = { children: React.ReactNode };
+
 const PlacesProvider = (props: Props) => {
   const [user, setUser] = useState<User>();
   const [isAuth, setIsAuth] = useState(false);
-  const [secrets, setSecrets] = useState<Secret>();
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    const _user = getUser();
+
+    if (!!_user) {
+      setUser(_user);
+      setIsAuth(true);
+
+      updateAuthToken(_user.access_token);
+    }
+  }, []);
 
   const login = async () => {
     try {
-      const { user, access_token, refresh_token } = await axios
-        .post("/auth/login", {
-          username: "admin",
-          password: "admin",
-        })
-        .then((res) => res.data);
+      const newUser = await authLogin("admin", "admin");
 
-      axios.defaults.headers.common["Authorization"] = `Bearer ${access_token}`;
-
+      setUser(newUser);
       setIsAuth(true);
-      setUser(user);
-      setSecrets({ access_token, refresh_token });
     } catch (error) {
       console.log(error);
     }
+  };
+
+  const logout = () => {
+    authLogout();
+    setUser(undefined);
+    setIsAuth(false);
+    navigate("/");
   };
 
   return (
@@ -34,6 +52,7 @@ const PlacesProvider = (props: Props) => {
         user,
         isAuth,
         login,
+        logout,
       }}
     >
       {props.children}

@@ -5,12 +5,14 @@ export interface UserContext {
   user: User | undefined,
   isAuth: boolean,
   login: () => void,
+  logout: () => void,
 }
 
 export const Context = React.createContext<UserContext>({
     user: undefined,
     isAuth: false,
-    login: () => {}
+    login: () => {},
+    logout: () => {},
 });
 
 export const Consumer = Context.Consumer;
