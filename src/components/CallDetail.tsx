@@ -1,7 +1,6 @@
 import React, { useEffect, useContext, useState } from "react";
 import { Context as CallContext } from "context/calls";
 import { useParams } from "react-router-dom";
-import appEvents from "services/events";
 
 import Card from "@material-ui/core/Card";
 import CardContent from "@material-ui/core/CardContent";
@@ -17,11 +16,12 @@ import Grid from "@material-ui/core/Grid";
 import Button from "@material-ui/core/Button";
 import NoteDialog from "./NoteDialog";
 import ArchiveIcon from "@material-ui/icons/Archive";
+import CircularProgress from "@material-ui/core/CircularProgress";
 
 const useStyles = makeStyles(() => ({
-  container: {
-    maxWidth: "800px",
-    margin: "auto",
+  content: {
+    minHeight: 400,
+    position: "relative",
   },
   arrow: {
     display: "inline-block",
@@ -55,32 +55,23 @@ const useStyles = makeStyles(() => ({
     marginRight: "10px",
   },
   fieldValue: {},
+  loader: {
+    position: "absolute",
+    top: "50%",
+    left: "50%",
+    transform: "translate(-50%,-50%)",
+  },
 }));
 
 const CallDetail = () => {
   const classes = useStyles();
 
   const [isVisibleNoteForm, setIsVisibleNoteForm] = useState(false);
-  const { currentCall, getCall, updateCurrentCall, addNote, archive } =
-    useContext(CallContext);
+  const { currentCall, getCall, addNote, archive } = useContext(CallContext);
   const { id } = useParams();
 
   useEffect(() => {
     getCall(id!);
-
-    appEvents.bind(
-      process.env.REACT_APP_PUSHER_APP_CHANNEL as string,
-      "update-call",
-      updateCurrentCall
-    );
-
-    return () => {
-      appEvents.unbind(
-        process.env.REACT_APP_PUSHER_APP_CHANNEL as string,
-        "update-call",
-        updateCurrentCall
-      );
-    };
   }, [id]);
 
   const showNoteForm = () => setIsVisibleNoteForm(true);
@@ -101,9 +92,10 @@ const CallDetail = () => {
           <Typography variant={"h4"} className={classes.header} align="center">
             Call Details
           </Typography>
-          <CardContent>
+          <CardContent className={classes.content}>
+            {!currentCall && <CircularProgress className={classes.loader} />}
             {currentCall && (
-              <div className={classes.container}>
+              <>
                 <div className={classes.actions}>
                   <Button
                     variant="contained"
@@ -196,7 +188,7 @@ const CallDetail = () => {
                     ))}
                   </List>
                 </section>
-              </div>
+              </>
             )}
           </CardContent>
         </Card>

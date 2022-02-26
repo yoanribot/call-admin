@@ -17,7 +17,7 @@ function getEventsHandler () {
       },
     });
 
-    pusher.connection.bind( 'error', function( err ) {
+    pusher.connection.bind('error', function( err ) {
       if( err.error.data.code === 4004 ) {
         Pusher.log('Over limit!');
       }
@@ -25,23 +25,20 @@ function getEventsHandler () {
 
     eventsHandler = pusher;
 
-    console.log('eventsHandler', eventsHandler);
-
     return eventsHandler;
   }
 
 function subscribe (channel) {
-  console.log('subscribing ....');
+  console.log('subscribe.......');
   if (eventsHandler) {
     const _channel = eventsHandler.subscribe(channel);
-
-    console.log('_channel', _channel);
 
     return _channel;
   }
 }
 
 function unsubscribe (channel) {
+  console.log('unsubscribe.......');
   if (!!eventsHandler) {
     eventsHandler.unsubscribe(channel);
   }

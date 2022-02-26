@@ -165,7 +165,9 @@ const CallList = () => {
         {Object.keys(callsGroups).map((groupKey) => (
           <Card key={`group-${groupKey}`} className={classes.callsGroup}>
             <div className={classes.callsGroupTitle}>
-              <Typography variant="h5">{groupKey}</Typography>
+              <Typography variant="h5" align="center">
+                {groupKey}
+              </Typography>
             </div>
             <div className={classes.callsGroupBody}>
               <List className={classes.root}>

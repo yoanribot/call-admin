@@ -8,7 +8,6 @@ import {
   updateAuthToken,
   logout as authLogout,
 } from "services/authentication";
-import axios from "axios";
 
 type Props = { children: React.ReactNode };
 

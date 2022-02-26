@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { Provider } from "./calls-context";
 import { Call, Pagination } from "types";
 import axios from "axios";
@@ -58,6 +58,22 @@ const PlacesProvider = (props: Props) => {
     setCurrentCall(call);
   };
 
+  const updateCallList = (call: Call) => {
+    // Update list of calls
+    setCalls((_calls) => {
+      const callsUpdated = [..._calls];
+      const index = _calls.findIndex((c) => c.id === call.id);
+
+      if (index >= 0) {
+        callsUpdated[index] = call;
+      }
+
+      console.log("callsUpdated", callsUpdated);
+
+      return callsUpdated;
+    });
+  };
+
   const archive = async (callIds: string[]) => {
     try {
       await Promise.all(
@@ -90,6 +106,7 @@ const PlacesProvider = (props: Props) => {
         pagination,
         updatePagination,
         updateCurrentCall,
+        updateCallList,
         archive,
         getCall,
         getCalls,
